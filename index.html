@@ -1,225 +1,413 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-  <meta charset="UTF-8">
-  <title>Kuiz Sistem Ejaan</title>
+  <meta charset="UTF-8" />
+  <title>Kuiz Sistem Ejaan — Interaktif</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-    body {
-      font-family: "Comic Sans MS", sans-serif;
-      background: url('https://thumbs.dreamstime.com/b/classroom-kids-teacher-professor-teaches-students-first-grade-elementary-school-class-little-children-preschool-120236345.jpg') no-repeat center center fixed;
-      background-size: cover;
-      margin: 0;
-      padding: 0;
-      color: #333;
-      text-align: center;
-      overflow-x: hidden;
+    :root{
+      --card-bg: rgba(255,255,255,0.95);
+      --accent: #2b4c7e;
+      --btn: #4CAF50;
+      --btn-hover: #45a049;
+      --next: #008CBA;
     }
-    .container {
-      background: rgba(255, 255, 255, 0.85);
-      border-radius: 20px;
-      width: 80%;
-      max-width: 800px;
-      margin: 80px auto;
-      padding: 30px;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+
+    /* 页面背景：彩色渐变缓慢移动 */
+    html,body{height:100%;margin:0;padding:0;font-family:"Comic Sans MS",sans-serif;}
+    body{
+      background: linear-gradient(120deg,#a1c4fd 0%, #c2e9fb 25%, #fbd3e9 50%, #fbc2eb 75%, #a6c0fe 100%);
+      background-size: 300% 300%;
+      animation: gradientMove 18s ease infinite;
+      color:#222;
+      overflow-x:hidden;
     }
-    h1 {
-      color: #2b4c7e;
-      margin-bottom: 20px;
+    @keyframes gradientMove {
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
     }
-    .question {
-      font-size: 22px;
-      margin-bottom: 20px;
+
+    /* 浮动背景气泡层（蓝白透明风格） */
+    .bubble-layer{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;}
+    .bg-bubble{
+      position:absolute;
+      border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(255,255,255,0.25));
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      opacity:0.7;
+      filter: blur(6px);
+      animation: floatUp linear infinite;
     }
-    button {
-      display: block;
-      width: 100%;
-      max-width: 400px;
-      margin: 10px auto;
-      padding: 12px;
-      font-size: 18px;
-      border-radius: 12px;
-      border: none;
-      background: #4CAF50;
-      color: white;
-      cursor: pointer;
-      transition: 0.3s;
+    @keyframes floatUp {
+      from { transform: translateY(120vh) translateX(0) scale(1); opacity: 0.6; }
+      to   { transform: translateY(-40vh) translateX(30vw) scale(1.2); opacity: 0; }
     }
-    button:hover {
-      background: #45a049;
-      transform: scale(1.05);
+
+    /* 页面主要容器 */
+    .wrap{position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 16px;}
+    .card{
+      width:90%;max-width:900px;background:var(--card-bg);
+      border-radius:16px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,0.12);
+      position:relative;overflow:visible;
     }
-    #nextBtn {
-      background: #008CBA;
+
+    .top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:12px;}
+    .title{color:var(--accent);font-size:22px;margin:0 0 6px 0;}
+    .controls{display:flex;gap:8px;align-items:center;}
+    .small{font-size:13px;color:#555;}
+
+    /* 输入与开始 */
+    #start-section{display:block;text-align:center;margin:8px 0 16px 0;}
+    #playerName{padding:10px 12px;border-radius:8px;border:1px solid #cfcfcf;width:60%;max-width:360px;font-size:16px}
+    .btn{display:inline-block;padding:10px 16px;border-radius:10px;border:none;background:var(--btn);color:#fff;font-weight:600;cursor:pointer;margin-left:8px;box-shadow:0 6px 14px rgba(76,175,80,0.18)}
+    .btn:hover{background:var(--btn-hover);transform:translateY(-2px)}
+    .btn-next{background:var(--next)}
+    .btn-next:hover{background:#0077aa}
+
+    /* 题目与选项布局 */
+    .question {font-size:20px;margin:14px 0 10px 0;color:#213;}
+    .options{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+    .opt-btn{
+      padding:12px 14px;border-radius:10px;border:none;background:#fff;cursor:pointer;
+      box-shadow:0 6px 12px rgba(0,0,0,0.06);text-align:left;font-size:16px;transition:all .18s;position:relative;overflow:hidden;
     }
-    #nextBtn:hover {
-      background: #0077aa;
+    .opt-btn:hover{transform:scale(1.02);box-shadow:0 12px 20px rgba(0,0,0,0.08)}
+    /* 选项点击样式（正确红色） */
+    .opt-correct{background:#e6f4ea;border:1px solid #c8efd1}
+    .opt-wrong{background:#ffecec;border:1px solid #ffd6d6}
+
+    /* 按钮波纹（简易实现） */
+    .opt-btn:active::after{
+      content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:120%;height:120%;background:rgba(0,0,0,0.06);border-radius:50%;
     }
-    #score {
-      font-size: 24px;
-      font-weight: bold;
-      margin-top: 20px;
+
+    /* 分数与评语 */
+    #score{font-size:18px;margin-top:14px;font-weight:700;color:#123;}
+    #feedback{margin-top:8px;font-size:15px;color:#444}
+
+    /* 问题淡入动画 */
+    .fade-in{animation:fadeIn .35s ease both}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+    /* 花瓣与红色提示泡泡（答对/答错特效） */
+    .petal, .err-bubble {
+      position:fixed;pointer-events:none;z-index:15;font-size:22px;will-change:transform,opacity;
+      transform-origin:center;
     }
-    #playerName {
-      font-size: 18px;
-      padding: 10px;
-      border-radius: 8px;
-      width: 70%;
-      margin: 10px auto;
-      border: 1px solid #ccc;
-      display: block;
+    @keyframes petalFall {
+      0%{transform:translateY(-10vh) rotate(0) scale(1); opacity:1}
+      100%{transform:translateY(110vh) rotate(720deg) scale(.7); opacity:0}
     }
-    .petal, .bubble {
-      position: fixed;
-      pointer-events: none;
-      z-index: 9999;
+    @keyframes errRise {
+      0%{transform:translateY(0) scale(1); opacity:1}
+      100%{transform:translateY(-120vh) scale(.6); opacity:0}
     }
-    @keyframes fall {
-      0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-    }
-    @keyframes rise {
-      0% { transform: translateY(0) scale(1); opacity: 1; }
-      100% { transform: translateY(-200px) scale(0); opacity: 0; }
+
+    /* 右上小开关 */
+    .switch{display:flex;align-items:center;gap:8px;font-size:13px;color:#444}
+
+    /* 重新开始 */
+    .restart{margin-top:14px;background:#ff6b6b}
+
+    /* 响应式 */
+    @media (max-width:520px){
+      .card{padding:18px}
+      #playerName{width:80%}
+      .title{font-size:18px}
     }
   </style>
 </head>
 <body>
-  <!-- Laman permulaan -->
-  <div class="container" id="start-container">
-    <h1>Selamat Datang ke Kuiz Sistem Ejaan!</h1>
-    <p>Sila masukkan nama anda untuk memulakan:</p>
-    <input type="text" id="playerName" placeholder="Masukkan nama anda di sini">
-    <button onclick="startQuiz()">Mula Kuiz</button>
+  <!-- 背景泡泡canvas层 -->
+  <div class="bubble-layer" id="bubbleLayer"></div>
+
+  <div class="wrap">
+    <div class="card" role="main" aria-live="polite">
+      <div class="top-row">
+        <div>
+          <h2 class="title">Kuiz Sistem Ejaan — Interaktif</h2>
+          <div class="small">Masukkan nama, kemudian tekan "Mula Kuiz". Nikmati animasi semasa bermain.</div>
+        </div>
+
+        <div class="controls">
+          <label class="switch small"><input type="checkbox" id="randomizeToggle"> Randomize soalan</label>
+        </div>
+      </div>
+
+      <!-- Start -->
+      <div id="start-section">
+        <input id="playerName" type="text" placeholder="Masukkan nama anda di sini" />
+        <button class="btn" id="startBtn">Mula Kuiz</button>
+      </div>
+
+      <!-- Quiz area -->
+      <div id="quiz-area" style="display:none;">
+        <div id="qbox" class="fade-in">
+          <div id="question" class="question"></div>
+          <div id="options" class="options"></div>
+          <div style="display:flex;gap:8px;align-items:center;margin-top:12px;">
+            <button id="nextBtn" class="btn btn-next" style="display:none">Soalan Seterusnya</button>
+            <div id="score" style="margin-left:auto"></div>
+          </div>
+          <div id="feedback"></div>
+        </div>
+      </div>
+
+    </div>
   </div>
 
-  <!-- Kuiz utama -->
-  <div class="container" id="quiz-container" style="display:none;">
-    <h1>Kuiz Sistem Ejaan</h1>
-    <div class="question" id="question"></div>
-    <div id="options"></div>
-    <button id="nextBtn" onclick="nextQuestion()">Soalan Seterusnya</button>
-    <div id="score"></div>
-  </div>
-
-  <!-- Muzik latar -->
-  <audio id="bgMusic" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3187c41eb2.mp3?filename=energetic-drums-11290.mp3" loop preload="auto"></audio>
-
+  <!-- 没有音效：只视觉 -->
   <script>
-    const quizData = [
+    /*************************************************************************
+     * 题库：完全使用你给的 30 题（未修改题目内容或正确答案）
+     *************************************************************************/
+    const originalQuiz = [
       { q: "1. Manakah ejaan yang betul?", options: ["A. Sekolah-ku", "B. Sekolah ku", "C. Sekolahku", "D. Sekolah@ku"], correct: 2 },
       { q: "2. Ayat manakah tiada kesalahan ejaan?", options: ["A. Saya sedang bemain di padang.", "B. Ali berjogging setiap hari.", "C. Ibu suka makan mee goreng.", "D. Adik saya lahir pada bulan Februari."], correct: 3 },
-      { q: "3. Perkataan yang dieja dengan betul ialah:", options: ["A. Tanggungjawab", "B. Tangungjawab", "C. Tanggungjawap", "D. Tanggungjawab"], correct: 0 },
-      { q: "4. Ejaan manakah yang salah?", options: ["A. Jerat", "B. Jeret", "C. Jerih", "D. Jeriji"], correct: 1 },
-      { q: "5. Manakah antara berikut bukan kesalahan ejaan?", options: ["A. Aktiviti kokurikulum", "B. Ko-kurikulum", "C. Ko kurikulum", "D. Ko_kurikulum"], correct: 0 },
-      { q: "6. Perkataan manakah yang betul ejaannya?", options: ["A. Birokrasi", "B. Biokrasi", "C. Beurokrasi", "D. Bureaukrasi"], correct: 0 },
-      { q: "7. Pilih perkataan yang dieja dengan salah.", options: ["A. Zohor", "B. Zuhur", "C. Zuhud", "D. Zuriat"], correct: 0 },
-      { q: "8. Perkataan manakah salah ejaannya?", options: ["A. Analisis", "B. Analisas", "C. Analitik", "D. Analis"], correct: 1 },
-      { q: "9. Pilih ayat yang betul ejaannya.", options: ["A. Ibu membeli sayor di pasar.", "B. Saya makan nasik goreng.", "C. Kakak mencuci pinggan di dapur.", "D. Adik bermain bola di padang."], correct: 3 },
-      { q: "10. Ejaan manakah betul?", options: ["A. Bertanggung jawab", "B. Bertanggungjawab", "C. Bertanggung-jawab", "D. Bertangungjawab"], correct: 1 },
-      { q: "11. Perkataan yang salah ejaannya ialah:", options: ["A. Gembira", "B. Bahagia", "C. Ceria", "D. Bergembela"], correct: 3 },
-      { q: "12. Pilih ejaan yang betul.", options: ["A. Sejarah", "B. Sjarah", "C. Sijarah", "D. Sejerah"], correct: 0 },
-      { q: "13. Manakah ejaan yang salah?", options: ["A. Ekonomi", "B. Ekspres", "C. Ekskavasai", "D. Eksklusif"], correct: 2 },
-      { q: "14. Ejaan yang betul bagi perkataan berikut ialah:", options: ["A. Surgeri", "B. Sergeri", "C. Surgeri", "D. Surgeri"], correct: 2 },
-      { q: "15. Ayat yang tiada kesalahan ejaan ialah:", options: ["A. Saya suke membaca buku.", "B. Ayah memandu ke pejabat.", "C. Kami bersiar-siar di pantay.", "D. Ibu mengoreng ikan."], correct: 1 }
+      { q: "3. Pilih perkataan yang dieja dengan salah.", options: ["A. pergerakan", "B. bekerjasama", "C. garfu", "D. pasar raya"], correct: 2 },
+      { q: "4. Manakah ejaan yang betul bagi perkataan berikut?", options: ["A. cantik", "B. chantek", "C. chantik", "D. cantek"], correct: 0 },
+      { q: "5. Manakah ejaan yang salah?", options: ["A. serba guna", "B. tomyam", "C. ibu bapa", "D. isipadu"], correct: 3 },
+      { q: "6. Perkataan manakah yang dieja dengan tepat?", options: ["A. teknoloji", "B. stesen", "C. professional", "D. patriotisma"], correct: 1 },
+      { q: "7. Pilih perkataan yang dieja dengan betul.", options: ["A. diubahsuai", "B. mengubah suaikan", "C. pengubahsuaian", "D. ubahsuaian"], correct: 2 },
+      { q: "8. Kata majmuk mantap yang betul ialah...", options: ["A. kereta api", "B. tengah hari", "C. jalan raya", "D. setiausaha"], correct: 3 },
+      { q: "9. Ayat manakah mempunyai kesalahan ejaan?", options: ["A. Saya akan pergi kesana nanti.", "B. Ali berada di padang sekolah tadi.", "C. Abu telah menjadi ketua kumpulan ini.", "D. Kek ini dimakan oleh Ahmad."], correct: 0 },
+      { q: "10. Manakah merupakan kata ganda yang betul bagi perkataan berikut?", options: ["A. guru besar-guru besar", "B. guru-guru besar", "C. guru besar-besar", "D. guru besar"], correct: 1 },
+      { q: "11. Makanan kedai ini _____ (adalah/ialah) sangat enak!", options: ["adalah", "ialah"], correct: 0 },
+      { q: "12. Lelaki yang sedang berlari itu _____ (adalah/ialah) abang saya.", options: ["adalah", "ialah"], correct: 1 },
+      { q: "13. Kereta api itu _____ (tidak/bukan) dari Ipoh.", options: ["tidak", "bukan"], correct: 1 },
+      { q: "14. Encik Omar _____ (tidak/bukan) berniaga pada hari ini.", options: ["tidak", "bukan"], correct: 0 },
+      { q: "15. Kerusi ini diperbuat _____ (dari/daripada) kayu jati.", options: ["dari", "daripada"], correct: 1 },
+      { q: "16. Cikgu Aiman berasal _____ (dari/daripada) Kluang, Johor.", options: ["dari", "daripada"], correct: 0 },
+      { q: "17. Saya dan Muthu berada _____ (di/pada) perpustakaan tadi.", options: ["di", "pada"], correct: 0 },
+      { q: "18. Majlis akan bermula _____ (di/pada) jam 10 pagi.", options: ["di", "pada"], correct: 1 },
+      { q: "19. Saya akan pergi _____ (ke/kepada) perpustakan untuk mengulang kaji.", options: ["ke", "kepada"], correct: 0 },
+      { q: "20. Fail ini perlu dihantar _____ (ke/kepada) Encik Shafiq.", options: ["ke", "kepada"], correct: 1 },
+      { q: "21. Manakah yang mempunyai kesalahan?", options: ["A. dua jam setengah", "B. oleh sebab", "C. kedua adiknya", "D. semua pelajar"], correct: 2 },
+      { q: "22. Pilih jawapan yang tiada kesalahan.", options: ["A. mereka-mereka", "B. setengah-tengah", "C. Pelbagai buku-buku", "D. Berpuluh-puluh orang"], correct: 3 },
+      { q: "23. Manakah yang tiada kesalahan?", options: ["A. cili sos", "B. goreng pisang", "C. penghawa dingin", "D. hal-hal lain"], correct: 3 },
+      { q: "24. Ayat manakah yang betul?", options: ["A. Ikan itu ditangkap oleh nelayan.", "B. Ikan itu ditangkap oleh saya.", "C. Ikan itu ditangkap oleh kamu.", "D. Ikan itu nelayan menangkap."], correct: 0 },
+      { q: "25. Pilih jawapan yang betul.", options: ["A. mengirimi surat", "B. menghadiahi ibu", "C. tertinggi sekali", "D. benar rendah"], correct: 1 },
+      { q: "26. Ayat manakah yang tidak betul?", options: ["A. Buku itu telah saya dibaca.", "B. Buku itu telah dibaca oleh Aiman.", "C. Buku itu telah saya baca.", "D. Buku itu telah kamu baca."], correct: 0 },
+      { q: "27. Ayat manakah tiada kesalahan?", options: ["A. Karangan ini di tulis oleh Ah Meng.", "B. Jason terjatuh di atas lantai tadi.", "C. Saya mendapat nombor ke lima dalam pertandingan melukis.", "D. Abu ter jumpa ibunya di pasar raya."], correct: 1 },
+      { q: "28. Manakah yang tidak betul?", options: ["A. oleh kerana", "B. pada masa depan", "C. bas mini", "D. klinik Dr. Mariam"], correct: 0 },
+      { q: "29. Ayat manakah yang salah?", options: ["A. Lukisan ini terdapat berbagai-bagai warna.", "B. Saya tidak suka makan sayur.", "C. Kuala Lumpur adalah ibu negara Malaysia.", "D. Wahai, pemandangan itu amat indah sekali!"], correct: 2 },
+      { q: "30. Pilih ayat yang betul.", options: ["A. Banyak kedai-kedai telah ditutup.", "B. Wah, bangunan itu sangat tertinggi!", "C. Saya telah memulangkan buku Ali kepada-nya.", "D. Sekolah ini terdapat ribuan pelajar."], correct: 3 }
     ];
 
-    let currentQuestion = 0;
+    /*************************************************************************
+     * 状态与 DOM 引用
+     *************************************************************************/
+    let quiz = []; // 当前题库（可能随机化）
+    let current = 0;
     let score = 0;
     let playerName = '';
 
+    const startBtn = document.getElementById('startBtn');
+    const playerInput = document.getElementById('playerName');
+    const randomizeToggle = document.getElementById('randomizeToggle');
+
+    const quizArea = document.getElementById('quiz-area');
     const questionEl = document.getElementById('question');
     const optionsEl = document.getElementById('options');
-    const scoreEl = document.getElementById('score');
     const nextBtn = document.getElementById('nextBtn');
-    const bgMusic = document.getElementById('bgMusic');
+    const scoreEl = document.getElementById('score');
+    const feedbackEl = document.getElementById('feedback');
 
-    function startQuiz() {
-      playerName = document.getElementById('playerName').value.trim();
-      if (playerName === '') {
-        alert("Sila masukkan nama anda terlebih dahulu!");
+    /*************************************************************************
+     * 初始化背景气泡（蓝白透明） - 持续生成并动画
+     *************************************************************************/
+    const bubbleLayer = document.getElementById('bubbleLayer');
+    function spawnBackgroundBubble(){
+      const b = document.createElement('div');
+      b.className = 'bg-bubble';
+      const size = 40 + Math.random()*140; // px
+      b.style.width = b.style.height = size + 'px';
+      // 随机起点 & 动画时长 & 左右偏移
+      const left = Math.random()*100;
+      b.style.left = left + 'vw';
+      const dur = 12 + Math.random()*18;
+      b.style.animationDuration = dur + 's';
+      // make different opacity
+      b.style.opacity = 0.35 + Math.random()*0.5;
+      bubbleLayer.appendChild(b);
+      // 清理
+      setTimeout(()=>{ b.remove(); }, (dur+1)*1000);
+    }
+    // 周期生成若干不同频率的气泡
+    setInterval(()=>{ spawnBackgroundBubble(); }, 800);
+    // 生成一批初始气泡
+    for(let i=0;i<8;i++) spawnBackgroundBubble();
+
+    /*************************************************************************
+     * 启动测验
+     *************************************************************************/
+    startBtn.addEventListener('click', () => {
+      playerName = playerInput.value.trim();
+      if(!playerName){
+        alert('Sila masukkan nama anda terlebih dahulu!');
+        playerInput.focus();
         return;
       }
-      bgMusic.volume = 0.3;
-      bgMusic.play().catch(() => {});
-      document.getElementById('start-container').style.display = 'none';
-      document.getElementById('quiz-container').style.display = 'block';
-      loadQuestion();
-    }
-
-    function loadQuestion() {
-      const q = quizData[currentQuestion];
-      questionEl.textContent = q.q;
-      optionsEl.innerHTML = '';
-      q.options.forEach((opt, index) => {
-        const btn = document.createElement('button');
-        btn.textContent = opt;
-        btn.onclick = () => checkAnswer(index);
-        optionsEl.appendChild(btn);
-      });
-      nextBtn.style.display = 'none';
-    }
-
-    function checkAnswer(selected) {
-      const q = quizData[currentQuestion];
-      const buttons = optionsEl.querySelectorAll('button');
-      buttons.forEach((btn, i) => {
-        btn.disabled = true;
-        if (i === q.correct) btn.style.background = '#4CAF50';
-        else if (i === selected) btn.style.background = '#f44336';
-      });
-
-      if (selected === q.correct) {
-        score++;
-        showPetals();
-      } else {
-        showBubbles();
+      // 根据开关决定是否随机题目（保留原题内容）
+      quiz = originalQuiz.slice();
+      if(randomizeToggle.checked){
+        // Fisher-Yates shuffle
+        for(let i=quiz.length-1;i>0;i--){
+          const j = Math.floor(Math.random()*(i+1));
+          [quiz[i],quiz[j]]=[quiz[j],quiz[i]];
+        }
       }
+      current = 0; score = 0;
+      document.getElementById('start-section').style.display = 'none';
+      quizArea.style.display = 'block';
+      renderQuestion();
+    });
 
-      nextBtn.style.display = 'block';
+    /*************************************************************************
+     * 渲染题目与选项（带淡入动画）
+     *************************************************************************/
+    function renderQuestion(){
+      const item = quiz[current];
+      questionEl.classList.remove('fade-in');
+      optionsEl.classList.remove('fade-in');
+      void questionEl.offsetWidth; // 强制重绘以重新触发动画
+      questionEl.textContent = item.q;
+      optionsEl.innerHTML = '';
+      item.options.forEach((opt, idx) => {
+        const b = document.createElement('button');
+        b.className = 'opt-btn';
+        b.textContent = opt;
+        b.onclick = () => chooseOption(idx, b);
+        optionsEl.appendChild(b);
+      });
+      // 隐藏下一题按钮直到选过
+      nextBtn.style.display = 'none';
+      scoreEl.textContent = `${playerName} — Markah: ${score}/${quiz.length}`;
+      feedbackEl.textContent = '';
+      // 渐入
+      setTimeout(()=>{ questionEl.classList.add('fade-in'); optionsEl.classList.add('fade-in'); }, 10);
     }
 
-    function nextQuestion() {
-      currentQuestion++;
-      if (currentQuestion < quizData.length) loadQuestion();
-      else showScore();
+    /*************************************************************************
+     * 选择答案：标记样式 + 触发特效
+     *************************************************************************/
+    function chooseOption(idx, btnElement){
+      // 禁用所有按钮
+      const buttons = optionsEl.querySelectorAll('button');
+      buttons.forEach(b=> b.disabled = true);
+      const correctIdx = quiz[current].correct;
+      // 标记正确/错误
+      buttons.forEach((b,i)=> {
+        if(i===correctIdx) b.classList.add('opt-correct');
+        if(i===idx && i!==correctIdx) b.classList.add('opt-wrong');
+      });
+
+      if(idx === correctIdx){
+        score++;
+        feedbackEl.textContent = 'Jawapan betul! 🌸';
+        createPetals(); // 花瓣
+      } else {
+        feedbackEl.textContent = 'Jawapan salah. Cuba lagi! ❌';
+        createErrorBubbles(); // 红泡泡提示
+      }
+      scoreEl.textContent = `${playerName} — Markah: ${score}/${quiz.length}`;
+      // 显示下一题或完成
+      nextBtn.style.display = 'inline-block';
     }
 
-    function showScore() {
+    nextBtn.addEventListener('click', ()=> {
+      current++;
+      if(current < quiz.length) renderQuestion();
+      else showResult();
+      // 平滑滚动回卡片顶部（移动设备体验）
+      window.scrollTo({top: document.querySelector('.card').offsetTop, behavior: 'smooth'});
+    });
+
+    /*************************************************************************
+     * 结束与评分评语
+     *************************************************************************/
+    function showResult(){
       questionEl.textContent = `Tahniah, ${playerName}! Anda telah menamatkan kuiz ini! 🎉`;
       optionsEl.innerHTML = '';
       nextBtn.style.display = 'none';
-      scoreEl.textContent = `Markah akhir anda ialah ${score} / ${quizData.length}`;
-    }
+      scoreEl.textContent = `Markah akhir: ${score} / ${quiz.length}`;
+      let msg = '';
+      const pct = score / quiz.length;
+      if(pct >= 0.9) msg = 'Hebat! Anda memang terbaik! 🌟';
+      else if(pct >= 0.66) msg = 'Bagus! Anda sangat cemerlang! 👍';
+      else if(pct >= 0.4) msg = 'Boleh cuba lagi — teruskan usaha anda! 💪';
+      else msg = 'Jangan putus asa! Banyakkan latihan anda. ✍️';
+      feedbackEl.innerHTML = `<div style="margin-top:10px;font-weight:700">${msg}</div>`;
+      // 显示重玩按钮
+      const r = document.createElement('button');
+      r.className = 'btn restart';
+      r.textContent = 'Mula Semula';
+      r.onclick = ()=> location.reload();
+      feedbackEl.appendChild(r);
 
-    // 🎉 答对特效（花瓣）
-    function showPetals() {
-      for (let i = 0; i < 20; i++) {
-        const petal = document.createElement('div');
-        petal.className = 'petal';
-        petal.textContent = '🌸';
-        petal.style.left = Math.random() * 100 + 'vw';
-        petal.style.fontSize = 20 + Math.random() * 20 + 'px';
-        petal.style.animation = `fall ${2 + Math.random() * 3}s linear forwards`;
-        document.body.appendChild(petal);
-        setTimeout(() => petal.remove(), 4000);
+      // 结尾庆祝（若高分）放几个花瓣/微小烟花效果
+      if(pct >= 0.9){
+        // 多次触发花瓣
+        for(let i=0;i<3;i++) setTimeout(()=>createPetals(30), i*400);
+      } else {
+        // 少量花瓣作为鼓励
+        createPetals(12);
       }
     }
 
-    // ❌ 答错特效（泡泡）
-    function showBubbles() {
-      for (let i = 0; i < 15; i++) {
-        const bubble = document.createElement('div');
-        bubble.className = 'bubble';
-        bubble.textContent = '❌';
-        bubble.style.left = Math.random() * 100 + 'vw';
-        bubble.style.top = Math.random() * 60 + 'vh';
-        bubble.style.fontSize = 20 + Math.random() * 20 + 'px';
-        bubble.style.animation = `rise ${1 + Math.random() * 2}s ease-out forwards`;
-        document.body.appendChild(bubble);
-        setTimeout(() => bubble.remove(), 2500);
+    /*************************************************************************
+     * 花瓣特效（答对奖励）—— emoji 或 colored circles
+     * createPetals(count) 可传入数量
+     *************************************************************************/
+    function createPetals(count = 18){
+      for(let i=0;i<count;i++){
+        const el = document.createElement('div');
+        el.className = 'petal';
+        // 使用 emoji（🌸）或 CSS 圆片；这里用 emoji 更漂亮
+        el.textContent = '🌸';
+        const startX = Math.random()*100; // vw
+        const size = 14 + Math.random()*22;
+        el.style.left = startX + 'vw';
+        el.style.fontSize = size + 'px';
+        const dur = 3 + Math.random()*2.5;
+        el.style.animation = `petalFall ${dur}s linear forwards`;
+        // 微小水平偏移
+        el.style.transform = `translateY(-10vh) rotate(${Math.random()*360}deg)`;
+        el.style.opacity = 1;
+        document.body.appendChild(el);
+        setTimeout(()=> el.remove(), (dur+0.2)*1000);
       }
     }
+
+    /*************************************************************************
+     * 错误红色泡泡特效（从下方向上冒出）—— createErrorBubbles(count)
+     *************************************************************************/
+    function createErrorBubbles(count = 12){
+      for(let i=0;i<count;i++){
+        const el = document.createElement('div');
+        el.className = 'err-bubble';
+        // 用红色 X emoji 或圆形
+        el.textContent = '❌';
+        const left = Math.random()*95;
+        el.style.left = left + 'vw';
+        const bottom = 4 + Math.random()*8;
+        el.style.bottom = bottom + 'vh';
+        const size = 18 + Math.random()*26;
+        el.style.fontSize = size + 'px';
+        const dur = 1.2 + Math.random()*1.2;
+        el.style.animation = `errRise ${dur}s ease-out forwards`;
+        document.body.appendChild(el);
+        setTimeout(()=> el.remove(), (dur+0.2)*1000);
+      }
+    }
+
+    /*************************************************************************
+     * 说明：页面载入时不会自动开始，用户需要输入名字并点击「Mula Kuiz」
+     *************************************************************************/
+    // 允许按 enter 启动
+    playerInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') startBtn.click(); });
   </script>
 </body>
 </html>
+
