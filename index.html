@@ -68,7 +68,7 @@
       margin-top: 20px;
     }
 
-    #name-input {
+    #playerName {
       font-size: 18px;
       padding: 10px;
       border-radius: 8px;
@@ -80,6 +80,7 @@
   </style>
 </head>
 <body>
+  <!-- Laman permulaan -->
   <div class="container" id="start-container">
     <h1>Selamat Datang ke Kuiz Sistem Ejaan!</h1>
     <p>Sila masukkan nama anda untuk memulakan:</p>
@@ -87,6 +88,7 @@
     <button onclick="startQuiz()">Mula Kuiz</button>
   </div>
 
+  <!-- Kuiz utama -->
   <div class="container" id="quiz-container" style="display:none;">
     <h1>Kuiz Sistem Ejaan</h1>
     <div class="question" id="question"></div>
@@ -96,18 +98,42 @@
   </div>
 
   <!-- Bunyi -->
-  <audio id="correctSound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
+  <audio id="correctSound" src="https://actions.google.com/sounds/v1/cartoon/concussive_drum_hit.ogg"></audio>
   <audio id="wrongSound" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg"></audio>
-  <audio id="bgMusic" src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Scott_Holmes_Music/Happy_Music/Scott_Holmes_Music_-_Happy_Ukulele.mp3" loop></audio>
+  <audio id="bgMusic" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3187c41eb2.mp3?filename=energetic-drums-11290.mp3" loop></audio>
 
   <script>
     const quizData = [
-      { q: "1. Manakah ejaan yang betul?", options: ["A. Sekolah-ku", "B. Sekolah ku", "C. Sekolahku", "D. Sekolah@ku" ], correct: 2 },
-      { q: "2. Ayat manakah tiada kesalahan ejaan?", options: ["A. Saya sedang bemain di padang.", "B. Ali berjogging setiap hari.", "C. Ibu suka makan mee goreng.", "D. Adik saya lahir pada bulan Februari."], correct: 3},
-      { q: "3. Pilih perkataan yang dieja dengan salah.", options: ["A. pergerakan", "B. bekerjasama", "C. garfu", "D. pasar raya" ], correct: 2 }, 
-      { q: "4. Manakah ejaan yang betul bagi perkataan berikut?", options: ["A. cantik", "B. chantek", "C. chantik", "D. cantek" ], correct: 0 },
-      { q: "5. Manakah ejaan yang salah?", options: ["A. serba guna", "B. tomyam", "C. ibu bapa", "D. isipadu" ], correct: 3}
-      // ...（你可以保留剩余题目不变）
+      { q: "1. Manakah ejaan yang betul?", options: ["A. Sekolah-ku", "B. Sekolah ku", "C. Sekolahku", "D. Sekolah@ku"], correct: 2 },
+      { q: "2. Ayat manakah tiada kesalahan ejaan?", options: ["A. Saya sedang bemain di padang.", "B. Ali berjogging setiap hari.", "C. Ibu suka makan mee goreng.", "D. Adik saya lahir pada bulan Februari."], correct: 3 },
+      { q: "3. Pilih perkataan yang dieja dengan salah.", options: ["A. pergerakan", "B. bekerjasama", "C. garfu", "D. pasar raya"], correct: 2 }, 
+      { q: "4. Manakah ejaan yang betul bagi perkataan berikut?", options: ["A. cantik", "B. chantek", "C. chantik", "D. cantek"], correct: 0 },
+      { q: "5. Manakah ejaan yang salah?", options: ["A. serba guna", "B. tomyam", "C. ibu bapa", "D. isipadu"], correct: 3 },
+      { q: "6. Perkataan manakah yang dieja dengan tepat?", options: ["A. teknoloji", "B. stesen", "C. professional", "D. patriotisma"], correct: 1 },
+      { q: "7. Pilih perkataan yang dieja dengan betul.", options: ["A. diubahsuai", "B. mengubah suaikan", "C. pengubahsuaian", "D. ubahsuaian"], correct: 2 },
+      { q: "8. Kata majmuk mantap yang betul ialah...", options: ["A. kereta api", "B. tengah hari", "C. jalan raya", "D. setiausaha"], correct: 3 },
+      { q: "9. Ayat manakah mempunyai kesalahan ejaan?", options: ["A. Saya akan pergi kesana nanti.", "B. Ali berada di padang sekolah tadi.", "C. Abu telah menjadi ketua kumpulan ini.", "D. Kek ini dimakan oleh Ahmad."], correct: 0 },
+      { q: "10. Manakah merupakan kata ganda yang betul bagi perkataan berikut?", options: ["A. guru besar-guru besar", "B. guru-guru besar", "C. guru besar-besar", "D. guru besar"], correct: 1 },
+      { q: "11. Makanan kedai ini _____ (adalah/ialah) sangat enak!", options: ["adalah", "ialah"], correct: 0 },
+      { q: "12. Lelaki yang sedang berlari itu _____ (adalah/ialah) abang saya.", options: ["adalah", "ialah"], correct: 1 },
+      { q: "13. Kereta api itu _____ (tidak/bukan) dari Ipoh.", options: ["tidak", "bukan"], correct: 1 },
+      { q: "14. Encik Omar _____ (tidak/bukan) berniaga pada hari ini.", options: ["tidak", "bukan"], correct: 0 },
+      { q: "15. Kerusi ini diperbuat _____ (dari/daripada) kayu jati.", options: ["dari", "daripada"], correct: 1 },
+      { q: "16. Cikgu Aiman berasal _____ (dari/daripada) Kluang, Johor.", options: ["dari", "daripada"], correct: 0 },
+      { q: "17. Saya dan Muthu berada _____ (di/pada) perpustakaan tadi.", options: ["di", "pada"], correct: 0 },
+      { q: "18. Majlis akan bermula _____ (di/pada) jam 10 pagi.", options: ["di", "pada"], correct: 1 },
+      { q: "19. Saya akan pergi _____ (ke/kepada) perpustakan untuk mengulang kaji.", options: ["ke", "kepada"], correct: 0 },
+      { q: "20. Fail ini perlu dihantar _____ (ke/kepada) Encik Shafiq.", options: ["ke", "kepada"], correct: 1 },
+      { q: "21. Manakah yang mempunyai kesalahan?", options: ["A. dua jam setengah", "B. oleh sebab", "C. kedua adiknya", "D. semua pelajar"], correct: 2 },
+      { q: "22. Pilih jawapan yang tiada kesalahan.", options: ["A. mereka-mereka", "B. setengah-tengah", "C. Pelbagai buku-buku", "D. Berpuluh-puluh orang"], correct: 3 },
+      { q: "23. Manakah yang tiada kesalahan?", options: ["A. cili sos", "B. goreng pisang", "C. penghawa dingin", "D. hal-hal lain"], correct: 3 },
+      { q: "24. Ayat manakah yang betul?", options: ["A. Ikan itu ditangkap oleh nelayan.", "B. Ikan itu ditangkap oleh saya.", "C. Ikan itu ditangkap oleh kamu.", "D. Ikan itu nelayan menangkap."], correct: 0 },
+      { q: "25. Pilih jawapan yang betul.", options: ["A. mengirimi surat", "B. menghadiahi ibu", "C. tertinggi sekali", "D. benar rendah"], correct: 1 },
+      { q: "26. Ayat manakah yang tidak betul?", options: ["A. Buku itu telah saya dibaca.", "B. Buku itu telah dibaca oleh Aiman.", "C. Buku itu telah saya baca.", "D. Buku itu telah kamu baca."], correct: 0 },
+      { q: "27. Ayat manakah tiada kesalahan?", options: ["A. Karangan ini di tulis oleh Ah Meng.", "B. Jason terjatuh di atas lantai tadi.", "C. Saya mendapat nombor ke lima dalam pertandingan melukis.", "D. Abu ter jumpa ibunya di pasar raya."], correct: 1 },
+      { q: "28. Manakah yang tidak betul?", options: ["A. oleh kerana", "B. pada masa depan", "C. bas mini", "D. klinik Dr. Mariam"], correct: 0 },
+      { q: "29. Ayat manakah yang salah?", options: ["A. Lukisan ini terdapat berbagai-bagai warna.", "B. Saya tidak suka makan sayur.", "C. Kuala Lumpur adalah ibu negara Malaysia.", "D. Wahai, pemandangan itu amat indah sekali!"], correct: 2 },
+      { q: "30. Pilih ayat yang betul.", options: ["A. Banyak kedai-kedai telah ditutup.", "B. Wah, bangunan itu sangat tertinggi!", "C. Saya telah memulangkan buku Ali kepada-nya.", "D. Sekolah ini terdapat ribuan pelajar."], correct: 3 }
     ];
 
     let currentQuestion = 0;
@@ -177,7 +203,6 @@
       nextBtn.style.display = 'none';
       scoreEl.textContent = `Markah akhir anda ialah ${score} / ${quizData.length}`;
     }
-
   </script>
 </body>
 </html>
