@@ -98,8 +98,8 @@
   </div>
 
   <!-- Bunyi -->
-  <audio id="correctSound" src="https://actions.google.com/sounds/v1/cartoon/concussive_drum_hit.ogg"></audio>
-  <audio id="wrongSound" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg"></audio>
+  <audio id="correctSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_bcf7a1a16f.mp3"></audio>
+  <audio id="wrongSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_7f6e3d3a27.mp3"></audio>
   <audio id="bgMusic" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3187c41eb2.mp3?filename=energetic-drums-11290.mp3" loop></audio>
 
   <script>
@@ -151,9 +151,16 @@
         alert("Sila masukkan nama anda terlebih dahulu!");
         return;
       }
+
       document.getElementById('start-container').style.display = 'none';
       document.getElementById('quiz-container').style.display = 'block';
-      document.getElementById('bgMusic').play();
+
+      const bg = document.getElementById('bgMusic');
+      bg.volume = 0.2;
+      bg.play().catch(() => {
+        console.log("Auto play disekat, tunggu klik seterusnya.");
+      });
+
       loadQuestion();
     }
 
@@ -181,10 +188,11 @@
 
       if (selected === q.correct) {
         score++;
-        document.getElementById('correctSound').play();
+        setTimeout(() => document.getElementById('correctSound').play(), 100);
       } else {
-        document.getElementById('wrongSound').play();
+        setTimeout(() => document.getElementById('wrongSound').play(), 100);
       }
+
       nextBtn.style.display = 'block';
     }
 
