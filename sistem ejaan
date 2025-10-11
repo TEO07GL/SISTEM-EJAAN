@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistem Ejaan Kuiz</title>
+  <style>
+    body {
+      font-family: "Comic Sans MS", sans-serif;
+      background: url('https://i.imgur.com/mHnV5qT.jpg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      text-align: center;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 20px;
+      width: 80%;
+      max-width: 800px;
+      margin: 80px auto;
+      padding: 30px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+      color: #2b4c7e;
+      margin-bottom: 20px;
+    }
+
+    .question {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      max-width: 400px;
+      margin: 10px auto;
+      padding: 12px;
+      font-size: 18px;
+      border-radius: 12px;
+      border: none;
+      background: #4CAF50;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #45a049;
+      transform: scale(1.05);
+    }
+
+    #nextBtn {
+      background: #008CBA;
+    }
+
+    #nextBtn:hover {
+      background: #0077aa;
+    }
+
+    #score {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Kuiz Sistem Ejaan</h1>
+    <div id="quiz-container">
+      <div class="question" id="question"></div>
+      <div id="options"></div>
+      <button id="nextBtn" onclick="nextQuestion()">Soalan Seterusnya</button>
+      <div id="score"></div>
+    </div>
+  </div>
+
+  <!-- Bunyi -->
+  <audio id="correctSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+  <audio id="wrongSound" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg"></audio>
+
+  <script>
+    const quizData = [
+      { q: "Manakah ejaan yang betul?", options: ["Kawan-kawan", "Kawan kawan", "Kawan–kawan"], correct: 0 },
+      { q: "Pilih ayat yang betul:", options: ["Saya suka membaca buku.", "Saya suka membaca buku-buku.", "Saya suka membaca buku buku."], correct: 0 },
+      { q: "Pilih perkataan yang salah ejaan:", options: ["Sekolah", "Canteen", "Pelajar"], correct: 1 },
+      { q: "Ayat yang betul ialah:", options: ["Dia pergi ke pasar semalam.", "Dia pergi kepasar semalam.", "Dia pergi ke pasarsemalam."], correct: 0 },
+      { q: "Ejaan yang betul bagi 'pejabat pos' ialah:", options: ["Pajabat pos", "Pejabat pos", "Pajabat Pos"], correct: 1 }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const scoreEl = document.getElementById('score');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function loadQuestion() {
+      let q = quizData[currentQuestion];
+      questionEl.textContent = q.q;
+      optionsEl.innerHTML = '';
+      q.options.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = opt;
+        btn.onclick = () => checkAnswer(index);
+        optionsEl.appendChild(btn);
+      });
+      nextBtn.style.display = 'none';
+    }
+
+    function checkAnswer(selected) {
+      const q = quizData[currentQuestion];
+      const buttons = optionsEl.querySelectorAll('button');
+      buttons.forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === q.correct) btn.style.background = '#4CAF50';
+        else if (i === selected) btn.style.background = '#f44336';
+      });
+
+      if (selected === q.correct) {
+        score++;
+        document.getElementById('correctSound').play();
+      } else {
+        document.getElementById('wrongSound').play();
+      }
+      nextBtn.style.display = 'block';
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+      } else {
+        showScore();
+      }
+    }
+
+    function showScore() {
+      questionEl.textContent = "Tahniah! Anda telah menamatkan kuiz ini!";
+      optionsEl.innerHTML = '';
+      nextBtn.style.display = 'none';
+      scoreEl.textContent = `Markah akhir anda ialah ${score} / ${quizData.length}`;
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
