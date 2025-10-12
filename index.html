@@ -6,35 +6,24 @@
   <style>
     body {
       font-family: "Comic Sans MS", sans-serif;
-      background: linear-gradient(to bottom right, #dbeafe, #ffffff);
+      background: linear-gradient(135deg, #a1c4fd, #c2e9fb, #e0c3fc);
+      background-size: 400% 400%;
+      animation: gradientMove 10s ease infinite;
       margin: 0;
       padding: 0;
-      overflow: hidden;
       color: #333;
       text-align: center;
+      overflow: hidden;
     }
 
-    /* 泡泡背景 */
-    .bubble {
-      position: fixed;
-      bottom: -100px;
-      background: rgba(255, 255, 255, 0.5);
-      border-radius: 50%;
-      animation: rise 20s infinite ease-in;
-    }
-    @keyframes rise {
-      0% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-110vh) scale(1.5);
-        opacity: 0;
-      }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .container {
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.85);
       border-radius: 20px;
       width: 80%;
       max-width: 800px;
@@ -99,57 +88,36 @@
       display: block;
     }
 
-    /* 花瓣和红泡泡动画 */
-    .petal, .redbubble {
+    /* 泡泡动画 */
+    .bubble {
       position: fixed;
-      pointer-events: none;
-      z-index: 20;
-    }
-
-    .petal {
-      width: 20px;
-      height: 20px;
-      background: pink;
+      bottom: -100px;
+      background: rgba(255, 255, 255, 0.5);
       border-radius: 50%;
-      opacity: 0.9;
-      animation: fall 3s linear forwards;
-    }
-
-    .redbubble {
-      width: 15px;
-      height: 15px;
-      background: rgba(255,0,0,0.6);
-      border-radius: 50%;
-      animation: floatUp 2s ease-out forwards;
-    }
-
-    @keyframes fall {
-      0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+      animation: floatUp linear infinite;
+      z-index: 1;
     }
 
     @keyframes floatUp {
-      0% { transform: translateY(0) scale(1); opacity: 1; }
-      100% { transform: translateY(-150px) scale(0.5); opacity: 0; }
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-120vh); opacity: 0; }
+    }
+
+    /* 答错红色震动 */
+    .shake {
+      animation: shake 0.4s;
+    }
+
+    @keyframes shake {
+      0% { transform: translate(0px, 0px); }
+      25% { transform: translate(5px, 0px); }
+      50% { transform: translate(-5px, 0px); }
+      75% { transform: translate(5px, 0px); }
+      100% { transform: translate(0px, 0px); }
     }
   </style>
 </head>
 <body>
-  <!-- 泡泡背景 -->
-  <script>
-    for (let i = 0; i < 20; i++) {
-      let bubble = document.createElement("div");
-      bubble.classList.add("bubble");
-      let size = Math.random() * 60 + 20;
-      bubble.style.width = size + "px";
-      bubble.style.height = size + "px";
-      bubble.style.left = Math.random() * 100 + "vw";
-      bubble.style.animationDuration = (10 + Math.random() * 10) + "s";
-      bubble.style.animationDelay = (Math.random() * 10) + "s";
-      document.body.appendChild(bubble);
-    }
-  </script>
-
   <!-- Laman permulaan -->
   <div class="container" id="start-container">
     <h1>Selamat Datang ke Kuiz Sistem Ejaan!</h1>
@@ -218,8 +186,49 @@
       }
       document.getElementById('start-container').style.display = 'none';
       document.getElementById('quiz-container').style.display = 'block';
+      createBubbles();
       loadQuestion();
     }
+
+    function createBubbles() {
+      for (let i = 0; i < 20; i++) {
+        const bubble = document.createElement('div');
+        const size = Math.random() * 40 + 10 + 'px';
+        bubble.classList.add('bubble');
+        bubble.style.width = size;
+        bubble.style.height = size;
+        bubble.style.left = Math.random() * 100 + 'vw';
+        bubble.style.animationDuration = (Math.random() * 8 + 6) + 's';
+        bubble.style.opacity = Math.random();
+        document.body.appendChild(bubble);
+      }
+    }
+
+    function showConfetti() {
+      for (let i = 0; i < 30; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.position = 'fixed';
+        confetti.style.top = '0px';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.width = '8px';
+        confetti.style.height = '8px';
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 60%)`;
+        confetti.style.borderRadius = '50%';
+        confetti.style.zIndex = '999';
+        confetti.style.animation = 'confettiFall 2s linear forwards';
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 2000);
+      }
+    }
+
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes confettiFall {
+        0% { transform: translateY(0) rotate(0); opacity: 1; }
+        100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
 
     function loadQuestion() {
       let q = quizData[currentQuestion];
@@ -234,17 +243,6 @@
       nextBtn.style.display = 'none';
     }
 
-    function spawnEffect(type) {
-      for (let i = 0; i < 15; i++) {
-        let el = document.createElement('div');
-        el.classList.add(type);
-        el.style.left = Math.random() * 100 + "vw";
-        el.style.top = (type === "petal" ? "-20px" : "80vh");
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 3000);
-      }
-    }
-
     function checkAnswer(selected) {
       const q = quizData[currentQuestion];
       const buttons = optionsEl.querySelectorAll('button');
@@ -256,9 +254,12 @@
 
       if (selected === q.correct) {
         score++;
-        spawnEffect('petal');
+        showConfetti();
       } else {
-        spawnEffect('redbubble');
+        document.querySelector('.container').classList.add('shake');
+        setTimeout(() => {
+          document.querySelector('.container').classList.remove('shake');
+        }, 500);
       }
       nextBtn.style.display = 'block';
     }
