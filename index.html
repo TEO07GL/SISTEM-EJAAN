@@ -101,8 +101,12 @@
       transition: transform 0.3s ease;
     }
 
+    /* 原本表情 */
     .happy { content: url('https://cdn-icons-png.flaticon.com/512/742/742751.png'); }
     .sad { content: url('https://cdn-icons-png.flaticon.com/512/742/742761.png'); }
+
+    /* ✅ 新增：答对时露出牙齿笑的表情 */
+    .smile { content: url('https://cdn-icons-png.flaticon.com/512/2584/2584692.png'); }
 
     #score {
       font-size: 24px;
@@ -236,7 +240,7 @@
       if (selected === q.correct) {
         score++;
         correctSound.play();
-        avatar.className = 'happy';
+        avatar.className = 'smile'; // ✅ 改这里：改成露齿笑表情
         const star = document.createElement('span');
         star.innerHTML = '⭐';
         starContainer.appendChild(star);
