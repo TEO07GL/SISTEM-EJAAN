@@ -326,95 +326,10 @@
       }
     }
 
- function showScore() {
+    function showScore() {
       document.getElementById('quizTitle').style.display = 'none';
       questionEl.innerHTML = `🎉 Tahniah, ${playerName}! Anda telah menamatkan kuiz ini.`;
       optionsEl.innerHTML = '';
       nextBtn.style.display = 'none';
       progressBar.style.width = "100%";
-      let rank = score >= 25 ? "🏆 Mantap, Anda Memang Terbaik!" :
-                 score >= 15 ? "✨ Bagus, Teruskan Usaha Anda Lagi!" :
-                 "😺 Banyakkan Latihan Anda!";
-      scoreEl.innerHTML = `Markah akhir anda ialah <b>${score} / ${quizData.length}</b><br>${rank}`;
-      endButtons.style.display = 'block';
-      // ensure any unanswered questions are recorded as null entries (already are)
-    }
-
-    // 显示全部题目与答题情况（每题都列出，若答对显示 ✅ Betul，答错显示 ❌ Salah，并给出正确答案）
-    function showAllAnswers() {
-      wrongAnswersDiv.style.display = 'block';
-      // build table header
-      let html = `<h3>📝 Keputusan - Semua Soalan</h3>`;
-      html += `<table class="results-table"><thead><tr><th style="width:6%;">No.</th><th style="width:44%;">Soalan</th><th style="width:26%;">Jawapan Anda</th><th style="width:24%;">Jawapan Betul / Status</th></tr></thead><tbody>`;
-
-      for (let i = 0; i < quizData.length; i++) {
-        const q = quizData[i];
-        const ans = userAnswers[i];
-        const qText = q.q;
-        let yourAnswerText = "(tidak menjawab)";
-        let correctText = q.options[q.correct];
-        let statusText = `<span class="status-wrong">❌ Salah</span>`; // default
-
-        if (ans && typeof ans.selected === 'number') {
-          yourAnswerText = q.options[ans.selected] || "(pilihan tidak sah)";
-          if (ans.selected === q.correct) {
-            statusText = `<span class="status-ok">✅ Betul</span>`;
-          } else {
-            // show correct + Salah
-            statusText = `${correctText} — <span class="status-wrong">❌ Salah</span>`;
-          }
-        } else {
-          // not answered
-          statusText = `${correctText} — <span class="status-wrong">(Tidak menjawab)</span>`;
-        }
-
-        // escape html in qText? we assume qText safe since it's static
-        html += `<tr>
-                  <td style="vertical-align:top;">${i+1}</td>
-                  <td>${qText}</td>
-                  <td>${yourAnswerText}</td>
-                  <td>${statusText}</td>
-                </tr>`;
-      }
-
-      html += `</tbody></table>`;
-      // add a close/hide button
-      html += `<div style="text-align:center; margin-top:10px;">
-                <button onclick="hideAllAnswers()" style="width:200px; display:inline-block;">Tutup Keputusan</button>
-               </div>`;
-
-      wrongAnswersDiv.innerHTML = html;
-      // scroll into view a bit
-      wrongAnswersDiv.scrollIntoView({behavior: 'smooth'});
-    }
-
-    function hideAllAnswers() {
-      wrongAnswersDiv.style.display = 'none';
-    }
-
-    function restartQuiz() {
-      // Reset variables and UI to start state, but keep playerName
-      currentQuestion = 0;
-      score = 0;
-      userAnswers = new Array(quizData.length).fill(null);
-      starContainer.innerHTML = '';
-      scoreEl.innerHTML = '';
-      wrongAnswersDiv.style.display = 'none';
-      endButtons.style.display = 'none';
-      document.getElementById('quizTitle').style.display = 'block';
-      document.getElementById('quiz-container').style.display = 'block';
-      loadQuestion();
-      // reset progress bar
-      progressBar.style.width = "0%";
-    }
-
-    function exitQuiz() {
-      // 清理并回到起始页面（保留输入名字）
-      document.getElementById('quiz-container').style.display = 'none';
-      document.getElementById('start-container').style.display = 'block';
-      // keep the name in input
-      document.getElementById('playerName').value = playerName;
-    }
-  </script>
-</body>
-</html>
+      let rank = score >= 25 ? "
