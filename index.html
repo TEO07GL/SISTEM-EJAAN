@@ -34,10 +34,7 @@
       z-index: 10;
     }
 
-    h1 {
-      color: #2b4c7e;
-      margin-bottom: 8px;
-    }
+    h1 { color: #2b4c7e; margin-bottom: 8px; }
 
     #progress-container {
       width: 100%;
@@ -56,124 +53,35 @@
       transition: width 0.4s ease;
     }
 
-    .question {
-      font-size: 20px;
-      margin-bottom: 16px;
-      animation: fadeIn 0.4s ease;
-      min-height: 56px;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    .question { font-size: 20px; margin-bottom: 16px; animation: fadeIn 0.4s ease; min-height: 56px; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
     button {
-      display: block;
-      width: 88%;
-      max-width: 420px;
-      margin: 8px auto;
-      padding: 12px;
-      font-size: 17px;
-      border-radius: 12px;
-      border: none;
-      background: #4CAF50;
-      color: white;
-      cursor: pointer;
-      transition: 0.2s;
+      display: block; width: 88%; max-width: 420px; margin: 8px auto;
+      padding: 12px; font-size: 17px; border-radius: 12px; border: none;
+      background: #4CAF50; color: white; cursor: pointer; transition: 0.2s;
     }
-
-    button:hover {
-      transform: scale(1.03);
-      background: #3e9144;
-    }
-
+    button:hover { transform: scale(1.03); background: #3e9144; }
     #nextBtn { background: #008CBA; }
     #nextBtn:hover { background: #0077aa; }
 
-    .option-btn {
-      text-align: left;
-      padding-left: 20px;
-    }
+    .option-btn { text-align: left; padding-left: 20px; }
 
     #avatar {
-      width: 70px;
-      height: 70px;
-      margin: 10px auto;
-      transition: transform 0.3s ease;
-      display: block;
+      width: 70px; height: 70px; margin: 10px auto; transition: transform 0.3s ease; display: block;
     }
-
-    .happy, .sad, .smile {
-      width: 70px !important;
-      height: 70px !important;
-      object-fit: contain;
-    }
-
+    .happy, .sad, .smile { width: 70px !important; height: 70px !important; object-fit: contain; }
     .happy { content: url('https://cdn-icons-png.flaticon.com/512/742/742751.png'); }
     .sad { content: url('https://cdn-icons-png.flaticon.com/512/742/742761.png'); }
     .smile { content: url('https://img.favpng.com/9/1/12/emoji-thumb-signal-emoticon-smiley-png-favpng-18fyyZ9vdD8PJFW0GzKjnQu6P.jpg'); }
 
-    #score {
-      font-size: 20px;
-      font-weight: bold;
-      margin-top: 14px;
-    }
-
-    #wrongAnswers {
-      text-align: left;
-      font-size: 16px;
-      margin-top: 18px;
-      background: rgba(255,255,255,0.96);
-      padding: 12px;
-      border-radius: 10px;
-      display: none;
-      max-height: 420px;
-      overflow: auto;
-      box-shadow: inset 0 0 6px rgba(0,0,0,0.05);
-    }
-
-    .result-row {
-      border-bottom: 1px dashed #e0e0e0;
-      padding: 10px 6px;
-      margin-bottom: 6px;
-    }
-
-    .result-row:last-child { border-bottom: none; margin-bottom: 0; }
-
-    .status-ok { color: #0a9b3a; font-weight: bold; }
-    .status-wrong { color: #c62828; font-weight: bold; }
-
-    .small-label { font-size: 14px; color: #555; }
-
-    table.results-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 15px;
-    }
-
-    table.results-table th, table.results-table td {
-      border: 1px solid #e6e6e6;
-      padding: 8px;
-      vertical-align: top;
-    }
-
-    table.results-table th {
-      background: #f7fbff;
-      color: #2b4c7e;
-      text-align: left;
-    }
+    #score { font-size: 20px; font-weight: bold; margin-top: 14px; }
+    #wrongAnswers { text-align: left; font-size: 16px; margin-top: 18px; background: rgba(255,255,255,0.96); padding: 12px; border-radius: 10px; display: none; max-height: 420px; overflow: auto; box-shadow: inset 0 0 6px rgba(0,0,0,0.05); }
 
     .controls { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px; }
+    input[type="text"]#playerName { padding:10px; width:70%; border-radius:10px; border:1px solid #ccc; font-size:16px; }
 
-    input[type="text"]#playerName {
-      padding:10px; width:70%; border-radius:10px; border:1px solid #ccc; font-size:16px;
-    }
-
-    @media (max-width:600px) {
-      button { width: 94%; }
-      .container { width: 95%; padding: 18px; margin: 20px auto; }
-    }
+    @media (max-width:600px) { button { width: 94%; } .container { width: 95%; padding: 18px; margin: 20px auto; } }
   </style>
 </head>
 <body>
@@ -181,9 +89,7 @@
     <h1>🎯 Kuiz Sistem Ejaan</h1>
     <p>Sila masukkan nama anda untuk mula</p>
     <input type="text" id="playerName" placeholder="Masukkan nama anda">
-    <div class="controls">
-      <button onclick="startQuiz()">🚀 Mula Kuiz</button>
-    </div>
+    <div class="controls"><button onclick="startQuiz()">🚀 Mula Kuiz</button></div>
   </div>
 
   <div class="container" id="quiz-container" style="display:none;">
@@ -194,12 +100,10 @@
     <div id="options"></div>
     <button id="nextBtn" onclick="nextQuestion()">➡️ Seterusnya</button>
     <div id="score"></div>
-
     <div id="wrongAnswers"></div>
 
     <div id="endButtons" style="display:none; margin-top:12px;">
       <div class="controls" style="margin-top:6px;">
-        <button onclick="showAllAnswers()">🔍 Semak Jawapan</button>
         <button onclick="restartQuiz()">🔄 Main Semula Kuiz</button>
         <button onclick="exitQuiz()">🚪 Keluar</button>
       </div>
@@ -236,7 +140,7 @@
       { q: "26. Ayat manakah yang tidak betul?", options: ["A. Buku itu telah saya dibaca.", "B. Buku itu telah dibaca oleh Aiman.", "C. Buku itu telah saya baca.", "D. Buku itu telah kamu baca."], correct: 0 },
       { q: "27. Ayat manakah tiada kesalahan?", options: ["A. Karangan ini di tulis oleh Ah Meng.", "B. Jason terjatuh di atas lantai tadi.", "C. Saya mendapat nombor ke lima dalam pertandingan melukis.", "D. Abu ter jumpa ibunya di pasar raya."], correct: 1 },
       { q: "28. Manakah yang tidak betul?", options: ["A. oleh kerana", "B. pada masa hadapan", "C. bas mini", "D. klinik Dr. Mariam"], correct: 0 },
-      { q: "29. Ayat manakah yang salah?", options: ["A. Lukisan ini terdapat berbagai-bagai warna.", "B. Saya tidak suka makan sayur.", "C. Kuala Lumpur adalah ibu negara Malaysia.", "D. Wahai, pemandangan itu amat indah sekali!"], correct: 2 },
+      { q: "29. Ayat manakah yang salah?", options: ["A. Lukisan ini terdapat berbagai-bagai warna.", "B. Saya tidak suka makan sayur.", "C. Kuala Lumpur adalah ibu negara Malaysia.", "D. Wahai, pemandangan itu amat indah sekali!"], correct: 0 },
       { q: "30. Pilih ayat yang betul.", options: ["A. Banyak kedai-kedai telah ditutup.", "B. Wah, bangunan itu sangat tertinggi!", "C. Saya telah memulangkan buku Ali kepada-nya.", "D. Sekolah ini terdapat ribuan pelajar."], correct: 3 }
     ];
 
@@ -253,14 +157,10 @@
     const currentQ = document.getElementById('currentQ');
     const progressBar = document.getElementById('progress-bar');
     const endButtons = document.getElementById('endButtons');
-    const wrongAnswersDiv = document.getElementById('wrongAnswers');
-
-    const correctSound = new Audio("https://assets.mixkit.co/sfx/preview/mixkit-game-level-completed-2059.mp3");
-    const wrongSound = new Audio("https://assets.mixkit.co/sfx/preview/mixkit-player-losing-or-failing-2042.mp3");
 
     function startQuiz() {
       playerName = document.getElementById('playerName').value.trim();
-      if (playerName === '') return alert("Masukkan nama anda dahulu!");
+      if (!playerName) return alert("Masukkan nama anda dahulu!");
       document.getElementById('start-container').style.display = 'none';
       document.getElementById('quiz-container').style.display = 'block';
       currentQuestion = 0;
@@ -268,7 +168,6 @@
       userAnswers = new Array(quizData.length).fill(null);
       scoreEl.innerHTML = '';
       endButtons.style.display = 'none';
-      wrongAnswersDiv.style.display = 'none';
       loadQuestion();
     }
 
@@ -278,7 +177,7 @@
       optionsEl.innerHTML = '';
       avatar.className = 'happy';
       currentQ.textContent = currentQuestion + 1;
-      progressBar.style.width = ((currentQuestion) / quizData.length) * 100 + "%";
+      progressBar.style.width = (currentQuestion / quizData.length) * 100 + "%";
 
       q.options.forEach((opt, i) => {
         const btn = document.createElement('button');
@@ -298,52 +197,42 @@
         if (i === q.correct) btn.style.background = '#4CAF50';
         else if (i === selected) btn.style.background = '#f44336';
       });
-
-      userAnswers[currentQuestion] = {
-        question: q.q,
-        selected: selected,
-        correct: q.correct,
-        options: q.options
-      };
-
-      if (selected === q.correct) {
-        score++;
-        try { correctSound.play(); } catch(e) {}
-        avatar.className = 'smile';
-      } else {
-        try { wrongSound.play(); } catch(e) {}
-        avatar.className = 'sad';
-      }
+      userAnswers[currentQuestion] = { question: q.q, selected, correct: q.correct, options: q.options };
+      avatar.className = (selected === q.correct) ? 'smile' : 'sad';
+      if (selected === q.correct) score++;
       nextBtn.style.display = 'block';
     }
 
     function nextQuestion() {
       currentQuestion++;
-      if (currentQuestion < quizData.length) {
-        loadQuestion();
-      } else {
-        showScore();
-      }
+      if (currentQuestion < quizData.length) loadQuestion();
+      else showScore();
     }
 
-    <script>
-function showScore() {
-  document.getElementById('quizTitle').style.display = 'none';
-  questionEl.innerHTML = `🎉 Tahniah, ${playerName}! Anda telah menamatkan kuiz ini.`;
-  optionsEl.innerHTML = '';
-  nextBtn.style.display = 'none';
-  progressBar.style.width = "100%";
+    function showScore() {
+      document.getElementById('quizTitle').style.display = 'none';
+      questionEl.innerHTML = `🎉 Tahniah, ${playerName}! Anda telah menamatkan kuiz ini.`;
+      optionsEl.innerHTML = '';
+      nextBtn.style.display = 'none';
+      progressBar.style.width = "100%";
 
-  let rank = score >= 25 
-    ? "🏆 Mantap, Anda Memang Terbaik!" 
-    : score >= 15 
-    ? "✨ Bagus, Teruskan Usaha Anda Lagi!" 
-    : "😺 Banyakkan Latihan Anda!";
+      let rank = score >= 25 ? "🏆 Mantap, Anda Memang Terbaik!" 
+               : score >= 15 ? "✨ Bagus, Teruskan Usaha Anda Lagi!" 
+               : "😺 Banyakkan Latihan Anda!";
+      scoreEl.innerHTML = `Markah akhir anda ialah <b>${score} / ${quizData.length}</b><br>${rank}`;
+      endButtons.style.display = 'block';
+    }
 
-  scoreEl.innerHTML = `Markah akhir anda ialah <b>${score} / ${quizData.length}</b><br>${rank}`;
-  endButtons.style.display = 'block';
+    function restartQuiz() {
+      document.getElementById('quizTitle').style.display = 'block';
+      endButtons.style.display = 'none';
+      currentQuestion = 0;
+      score = 0;
+      loadQuestion();
+      scoreEl.innerHTML = '';
+    }
 
-  
-  }
-}
-</script>
+    function exitQuiz() { location.reload(); }
+  </script>
+</body>
+</html>
