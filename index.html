@@ -326,10 +326,24 @@
       }
     }
 
-    function showScore() {
-      document.getElementById('quizTitle').style.display = 'none';
-      questionEl.innerHTML = `🎉 Tahniah, ${playerName}! Anda telah menamatkan kuiz ini.`;
-      optionsEl.innerHTML = '';
-      nextBtn.style.display = 'none';
-      progressBar.style.width = "100%";
-      let rank = score >= 25 ? "
+    <script>
+function showScore() {
+  document.getElementById('quizTitle').style.display = 'none';
+  questionEl.innerHTML = `🎉 Tahniah, ${playerName}! Anda telah menamatkan kuiz ini.`;
+  optionsEl.innerHTML = '';
+  nextBtn.style.display = 'none';
+  progressBar.style.width = "100%";
+
+  let rank = score >= 25 
+    ? "🏆 Mantap, Anda Memang Terbaik!" 
+    : score >= 15 
+    ? "✨ Bagus, Teruskan Usaha Anda Lagi!" 
+    : "😺 Banyakkan Latihan Anda!";
+
+  scoreEl.innerHTML = `Markah akhir anda ialah <b>${score} / ${quizData.length}</b><br>${rank}`;
+  endButtons.style.display = 'block';
+
+  
+  }
+}
+</script>
