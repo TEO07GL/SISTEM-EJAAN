@@ -328,21 +328,6 @@
         options: q.options
       };
 
-      if (selected === q.correct) {
-        score++;
-        try { correctSound.play(); } catch(e) {}
-        avatar.className = 'smile';
-        // add a star for correct
-        const star = document.createElement('span');
-        star.innerHTML = '⭐';
-        starContainer.appendChild(star);
-      } else {
-        try { wrongSound.play(); } catch(e) {}
-        avatar.className = 'sad';
-      }
-      nextBtn.style.display = 'block';
-    }
-
     function nextQuestion() {
       currentQuestion++;
       if (currentQuestion < quizData.length) {
