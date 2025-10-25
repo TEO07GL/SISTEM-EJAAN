@@ -97,9 +97,18 @@
     }
 
     #avatar {
-      width: 60px;
+      width: 70px;  /* 固定头像大小 */
+      height: 70px;
       margin: 10px auto;
       transition: transform 0.3s ease;
+      display: block;
+    }
+
+    /* 👇 修复图片大小一致问题，仅此处修改 👇 */
+    .happy, .sad, .smile {
+      width: 70px !important;
+      height: 70px !important;
+      object-fit: contain;
     }
 
     .happy { content: url('https://cdn-icons-png.flaticon.com/512/742/742751.png'); }
